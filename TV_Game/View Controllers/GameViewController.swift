@@ -6,6 +6,12 @@
 //  Copyright © 2018 Xcode User. All rights reserved.
 //
 
+/*
+ Created by Austin Peddle
+ 
+ Loads Game into scene
+ */
+
 import UIKit
 import SpriteKit
 import GameplayKit
@@ -15,6 +21,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Get scene view
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "GameScene") {
