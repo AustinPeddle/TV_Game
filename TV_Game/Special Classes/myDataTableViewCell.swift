@@ -11,6 +11,7 @@ import UIKit
 class myDataTableViewCell: UITableViewCell {
     
     @IBOutlet var score : UILabel!
+    @IBOutlet var username : UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

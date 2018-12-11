@@ -7,49 +7,39 @@
 //
 
 import UIKit
+import Alamofire
 
 class getData: NSObject {
 
-    var dbData : [NSDictionary]?
+    var dbData: [NSDictionary]?
+    let myURL = "http://kaur1699.dev.fast.sheridanc.on.ca/iOS_Final_Project/getScores.php"
     
-    let myUrl = "http://peddleau.dev.fast.sheridanc.on.ca/MyData/sqlToJson.php" as String
-    
-    enum JSONError : String, Error {
+    enum JSONError: String, Error {
         case NoData = "Error: No Data"
-        case ConversionFailed = "Error: conversion from Json Failed"
+        case ConversionFailed = "Error: Conversion to JSON Failed"
     }
     
-    func jsonParser()
-    {
-        guard let endpoint = URL(string: myUrl) else {
-            print("Error creating endpoint")
-            return
-        }
-
-        let request = URLRequest(url: endpoint)
+    func JSONParser() {
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        Alamofire.request(myURL, method: .get, parameters: nil, encoding: URLEncoding.httpBody).responseString { (response) in
             do {
-
-                let datastring = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                print(datastring!)
+                let dataString = NSString(data: response.data!, encoding: String.Encoding.utf8.rawValue)
                 
-                guard let data = data else {
+                guard let data = response.data else {
                     throw JSONError.NoData
                 }
                 
                 guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [NSDictionary] else {
                     throw JSONError.ConversionFailed
                 }
-                print(json)
-                self.dbData = json
                 
+                self.dbData = json
             } catch let error as JSONError {
                 print(error.rawValue)
             } catch let error as NSError {
                 print(error.debugDescription)
             }
-            }.resume()
+        }
     }
     
 }

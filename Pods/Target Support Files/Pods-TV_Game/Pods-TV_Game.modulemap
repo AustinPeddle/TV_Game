@@ -1,0 +1,6 @@
+framework module Pods_TV_Game {
+  umbrella header "Pods-TV_Game-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -23,19 +23,20 @@ class TableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(self.refreshTable), userInfo: nil, repeats: true);
+        self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.refreshTable), userInfo: nil, repeats: true)
         
-        GetData.jsonParser()
+        GetData.JSONParser()
         
     }
     
     @objc func refreshTable(){
-        
-        if (GetData.dbData?.count)! > 0
-        {
-            GetData.dbData = GetData.dbData?.sorted { ($0.value(forKey: "SCORE") as! String ?? "") > ($1.value(forKey: "SCORE") as! String ?? "") }
-            self.myTable.reloadData()
-            self.timer.invalidate()
+    
+        if GetData.dbData != nil {
+            if (GetData.dbData?.count)! > 0 {
+                GetData.dbData = GetData.dbData?.sorted { ($0.value(forKey: "Highscore") as! String ?? "") > ($1.value(forKey: "Highscore") as! String ?? "") }
+                self.tableView.reloadData()
+                self.timer.invalidate()
+            }
         }
     }
     
@@ -58,14 +59,10 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if GetData.dbData != nil
-        {
+        if GetData.dbData != nil {
             return (GetData.dbData?.count)!
         }
-        else
-        {
-            return 0
-        }
+        return 0
     }
     
     
@@ -74,10 +71,13 @@ class TableViewController: UITableViewController {
         let tableCell : myDataTableViewCell = tableView.dequeueReusableCell(withIdentifier: "myCell") as? myDataTableViewCell ?? myDataTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "myCell")
         
         let row = indexPath.row
-        let rowData = (GetData.dbData?[row])! as NSDictionary
-        tableCell.score.text = rowData["SCORE"] as? String
+        let rowData = GetData.dbData![row] as NSDictionary
+        
+        tableCell.username.text = rowData["Username"] as? String
+        tableCell.score.text = rowData["Highscore"] as? String
         
         return tableCell
     }
 
 }
+
